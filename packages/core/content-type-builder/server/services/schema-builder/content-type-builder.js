@@ -77,8 +77,13 @@ module.exports = function createComponentBuilder() {
       }
 
       const contentType = createSchemaHandler({
+  <<<<<<< v4/migrate-src
+        modelName: modelName,
+        dir: path.join(strapi.dirs.api, modelName, 'content-types', modelName),
+  =======
         modelName: infos.singularName,
         dir: path.join(strapi.dir, 'api', infos.singularName, 'content-types', infos.singularName),
+  >>>>>>> v4/plural-name-in-CTB
         filename: `schema.json`,
       });
 
