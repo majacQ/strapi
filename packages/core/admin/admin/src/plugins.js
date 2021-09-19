@@ -5,7 +5,11 @@ import i18nPlugin from '../../../../plugins/i18n/admin/src';
 // import sentryPlugin from '../../../../plugins/sentry/admin/src';
 import usersPermissionsPlugin from '../../../../plugins/users-permissions/admin/src';
 import ctbPlugin from '../../../content-type-builder/admin/src';
+  <<<<<<< ds-props-update
 import emailPlugin from '../../../email/admin/src';
+  =======
+// import emailPlugin from '../../../email/admin/src';
+  >>>>>>> core/enable-ctb
 import uploadPlugin from '../../../upload/admin/src';
 
 const plugins = {
