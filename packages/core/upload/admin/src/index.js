@@ -24,7 +24,12 @@ export default {
     // TODO update doc and guides
     app.addComponents({ name: 'media-library', Component: InputModalStepper });
 
+  <<<<<<< bump-parts-alpha-33
     app.addMenuLink({
+  =======
+    TODO
+    app.addCorePluginMenuLink({
+  >>>>>>> test/enable-plugins
       to: `/plugins/${pluginId}`,
       icon,
       intlLabel: {
@@ -32,11 +37,14 @@ export default {
         defaultMessage: 'Media Library',
       },
       permissions: pluginPermissions.main,
+  <<<<<<< bump-parts-alpha-33
       Component: async () => {
         const component = await import(/* webpackChunkName: "upload" */ './pages/App');
 
         return component;
       },
+  =======
+  >>>>>>> test/enable-plugins
     });
 
     app.addFields({ type: 'media', Component: InputMedia });

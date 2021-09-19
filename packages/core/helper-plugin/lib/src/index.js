@@ -202,4 +202,8 @@ export { default as PageSizeURLQuery } from './components/PageSizeURLQuery';
 
 // New icons
 export { default as SortIcon } from './icons/SortIcon';
+  <<<<<<< bump-parts-alpha-33
 export { default as RemoveRoundedButton } from './icons/RemoveRoundedButton';
+  =======
+export { default as TP } from './tmp/TP';
+  >>>>>>> test/enable-plugins

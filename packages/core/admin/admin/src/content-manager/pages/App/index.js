@@ -1,10 +1,14 @@
 import React from 'react';
 import { Switch, Route, useRouteMatch, Redirect, useLocation } from 'react-router-dom';
+  <<<<<<< bump-parts-alpha-33
 import { CheckPagePermissions, LoadingIndicatorPage, NotFound } from '@strapi/helper-plugin';
 import { Layout, HeaderLayout } from '@strapi/parts/Layout';
 import { Main } from '@strapi/parts';
 import { useIntl } from 'react-intl';
 import sortBy from 'lodash/sortBy';
+  =======
+import { CheckPagePermissions, LoadingIndicatorPage, NotFound, TP } from '@strapi/helper-plugin';
+  >>>>>>> test/enable-plugins
 import permissions from '../../../permissions';
 import getTrad from '../../utils/getTrad';
 import DragLayer from '../../components/DragLayer';
@@ -62,7 +66,11 @@ const App = () => {
   }
 
   return (
+  <<<<<<< bump-parts-alpha-33
     <Layout sideNav={<LeftMenu />}>
+  =======
+    <TP>
+  >>>>>>> test/enable-plugins
       <DragLayer />
       <ModelsContext.Provider value={{ refetchData }}>
         <Switch>
@@ -86,7 +94,11 @@ const App = () => {
           <Route path="" component={NotFound} />
         </Switch>
       </ModelsContext.Provider>
+  <<<<<<< bump-parts-alpha-33
     </Layout>
+  =======
+    </TP>
+  >>>>>>> test/enable-plugins
   );
 };
 

@@ -1,3 +1,4 @@
+  <<<<<<< bump-parts-alpha-33
 import React, { useState } from 'react';
 import { Redirect } from 'react-router-dom';
 import { useIntl } from 'react-intl';
@@ -21,6 +22,12 @@ import { UploadAssetDialog } from '../../components/UploadAssetDialog/UploadAsse
 import { ListView } from './components/ListView';
 import { useAssets } from '../../hooks/useAssets';
 import { getTrad } from '../../utils';
+  =======
+import React from 'react';
+import { Switch, Route, Redirect } from 'react-router-dom';
+import { LoadingIndicatorPage, useRBAC, TP } from '@strapi/helper-plugin';
+import pluginId from '../../pluginId';
+  >>>>>>> test/enable-plugins
 import pluginPermissions from '../../permissions';
 
 const BoxWithHeight = styled(Box)`
@@ -43,8 +50,21 @@ const App = () => {
   const canRead = state.allowedActions.canMain;
   const loading = state.isLoading || isLoading;
 
+  <<<<<<< bump-parts-alpha-33
   if (!loading && !canRead) {
     return <Redirect to="/" />;
+  =======
+  if (state.allowedActions.canMain) {
+    return (
+      <TP>
+        <AppContext.Provider value={state}>
+          <Switch>
+            <Route path={`/plugins/${pluginId}`} component={HomePage} />
+          </Switch>
+        </AppContext.Provider>
+      </TP>
+    );
+  >>>>>>> test/enable-plugins
   }
 
   return (

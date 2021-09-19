@@ -5,7 +5,11 @@ import i18nPlugin from '../../../../plugins/i18n/admin/src';
 // import sentryPlugin from '../../../../plugins/sentry/admin/src';
 import usersPermissionsPlugin from '../../../../plugins/users-permissions/admin/src';
 import ctbPlugin from '../../../content-type-builder/admin/src';
+  <<<<<<< bump-parts-alpha-33
 import emailPlugin from '../../../email/admin/src';
+  =======
+// import emailPlugin from '../../../email/admin/src';
+  >>>>>>> test/enable-plugins
 import uploadPlugin from '../../../upload/admin/src';
 
 const plugins = {
