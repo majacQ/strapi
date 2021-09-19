@@ -6,13 +6,21 @@ import { prefixFileUrlWithBackendUrl, getFileExtension } from '@strapi/helper-pl
 import { ImageAssetCard } from '../../../components/AssetCard/ImageAssetCard';
 import { VideoAssetCard } from '../../../components/AssetCard/VideoAssetCard';
 import { DocAssetCard } from '../../../components/AssetCard/DocAssetCard';
+  <<<<<<< chore/test-config
+  =======
+import { AssetType } from '../../../constants';
+  >>>>>>> add-asset-to-pending
 
 export const ListView = ({ assets }) => {
   return (
     <KeyboardNavigable tagName="article">
       <GridLayout>
         {assets.map(asset => {
+  <<<<<<< chore/test-config
           if (asset.mime.includes('video')) {
+  =======
+          if (asset.mime.includes(AssetType.Video)) {
+  >>>>>>> add-asset-to-pending
             return (
               <VideoAssetCard
                 id={asset.id}
@@ -25,7 +33,11 @@ export const ListView = ({ assets }) => {
             );
           }
 
+  <<<<<<< chore/test-config
           if (asset.mime.includes('image')) {
+  =======
+          if (asset.mime.includes(AssetType.Image)) {
+  >>>>>>> add-asset-to-pending
             return (
               <ImageAssetCard
                 id={asset.id}

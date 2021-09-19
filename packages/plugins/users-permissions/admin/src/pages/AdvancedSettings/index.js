@@ -56,7 +56,11 @@ const AdvancedSettingsPage = () => {
     onSuccess: () => {
       notifyStatus(
         formatMessage({
+  <<<<<<< chore/test-config
           id: getTrad('Form.advancedSettings.data.loaded'),
+  =======
+          id: 'Form.advancedSettings.data.loaded',
+  >>>>>>> add-asset-to-pending
           defaultMessage: 'Advanced settings data has been loaded',
         })
       );
@@ -64,7 +68,11 @@ const AdvancedSettingsPage = () => {
     onError: () => {
       toggleNotification({
         type: 'warning',
+  <<<<<<< chore/test-config
         message: { id: getTrad('notification.error'), defaultMessage: 'An error occured' },
+  =======
+        message: { id: 'notification.error', defaultMessage: 'An error occured' },
+  >>>>>>> add-asset-to-pending
       });
     },
   });
@@ -76,7 +84,11 @@ const AdvancedSettingsPage = () => {
       await queryClient.invalidateQueries('advanced');
       toggleNotification({
         type: 'success',
+  <<<<<<< chore/test-config
         message: { id: getTrad('notification.success.saved'), defaultMessage: 'Saved' },
+  =======
+        message: { id: 'notification.success.saved', defaultMessage: 'Saved' },
+  >>>>>>> add-asset-to-pending
       });
 
       unlockApp();
@@ -84,7 +96,11 @@ const AdvancedSettingsPage = () => {
     onError: () => {
       toggleNotification({
         type: 'warning',
+  <<<<<<< chore/test-config
         message: { id: getTrad('notification.error'), defaultMessage: 'An error occured' },
+  =======
+        message: { id: 'notification.error', defaultMessage: 'An error occured' },
+  >>>>>>> add-asset-to-pending
       });
       unlockApp();
     },

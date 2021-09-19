@@ -8,12 +8,24 @@ import { Button } from '@strapi/parts/Button';
 import { Form } from '@strapi/helper-plugin';
 import { Formik } from 'formik';
 import { getTrad, urlSchema } from '../../../utils';
+  <<<<<<< chore/test-config
+  =======
+import { urlsToAssets } from '../../../utils/urlsToAssets';
+  >>>>>>> add-asset-to-pending
 
 export const FromUrlForm = ({ onClose, onAddAsset }) => {
   const { formatMessage } = useIntl();
 
+  <<<<<<< chore/test-config
   const handleSubmit = () => {
     onAddAsset();
+  =======
+  const handleSubmit = async ({ urls }) => {
+    const urlArray = urls.split(/\r?\n/);
+    const assets = await urlsToAssets(urlArray);
+
+    onAddAsset(assets);
+  >>>>>>> add-asset-to-pending
   };
 
   return (
@@ -55,6 +67,7 @@ export const FromUrlForm = ({ onClose, onAddAsset }) => {
             }
             endActions={
               <Button type="submit">
+  <<<<<<< chore/test-config
                 {formatMessage(
                   {
                     id: getTrad('modal.upload-list.footer.button.singular'),
@@ -62,6 +75,12 @@ export const FromUrlForm = ({ onClose, onAddAsset }) => {
                   },
                   { number: 0 }
                 )}
+  =======
+                {formatMessage({
+                  id: getTrad('button.next'),
+                  defaultMessage: 'Next',
+                })}
+  >>>>>>> add-asset-to-pending
               </Button>
             }
           />

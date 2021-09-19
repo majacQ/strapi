@@ -9,9 +9,19 @@ import { Stack } from '@strapi/parts/Stack';
 import { Grid, GridItem } from '@strapi/parts/Grid';
 import { KeyboardNavigable } from '@strapi/parts/KeyboardNavigable';
 import { DocAssetCard } from '../../AssetCard/DocAssetCard';
+  <<<<<<< chore/test-config
 import { getTrad } from '../../../utils';
 
 export const PendingAssetStep = ({ onClose }) => {
+  =======
+import { ImageAssetCard } from '../../AssetCard/ImageAssetCard';
+import { VideoAssetCard } from '../../AssetCard/VideoAssetCard';
+import { UnknownAssetCard } from '../../AssetCard/UnknownAssetCard';
+import { getTrad } from '../../../utils';
+import { AssetType, AssetSource } from '../../../constants';
+
+export const PendingAssetStep = ({ onClose, assets }) => {
+  >>>>>>> add-asset-to-pending
   const { formatMessage } = useIntl();
 
   return (
@@ -54,6 +64,7 @@ export const PendingAssetStep = ({ onClose }) => {
           </Row>
           <KeyboardNavigable tagName="article">
             <Grid gap={4}>
+  <<<<<<< chore/test-config
               {Array(20)
                 .fill(null)
                 .map((_, idx) => (
@@ -62,6 +73,54 @@ export const PendingAssetStep = ({ onClose }) => {
                     <DocAssetCard name="This is a test" extension="pdf" />
                   </GridItem>
                 ))}
+  =======
+              {assets.map((asset, idx) => {
+                const assetKey = `${asset.url}-${idx}`;
+
+                if (asset.type === AssetType.Image) {
+                  return (
+                    <GridItem col={4} key={assetKey}>
+                      <ImageAssetCard
+                        id={assetKey}
+                        name={asset.url}
+                        extension={asset.ext}
+                        height={asset.height}
+                        width={asset.width}
+                        thumbnail={asset.url}
+                      />
+                    </GridItem>
+                  );
+                }
+
+                if (asset.type === AssetType.Video) {
+                  return (
+                    <GridItem col={4} key={assetKey}>
+                      <VideoAssetCard
+                        id={assetKey}
+                        name={asset.url}
+                        extension={asset.ext}
+                        url={asset.url}
+                        mime={asset.mime}
+                      />
+                    </GridItem>
+                  );
+                }
+
+                if (asset.type === AssetType.Unknown) {
+                  return (
+                    <GridItem col={4} key={assetKey}>
+                      <UnknownAssetCard id={assetKey} name={asset.url} extension={asset.ext} />
+                    </GridItem>
+                  );
+                }
+
+                return (
+                  <GridItem col={4} key={assetKey}>
+                    <DocAssetCard name={asset.url} extension={asset.ext} />
+                  </GridItem>
+                );
+              })}
+  >>>>>>> add-asset-to-pending
             </Grid>
           </KeyboardNavigable>
         </Stack>
@@ -90,5 +149,17 @@ export const PendingAssetStep = ({ onClose }) => {
 };
 
 PendingAssetStep.propTypes = {
+  <<<<<<< chore/test-config
+  =======
+  assets: PropTypes.arrayOf(
+    PropTypes.shape({
+      source: PropTypes.oneOf(Object.values(AssetSource)),
+      type: PropTypes.oneOf(Object.values(AssetType)),
+      url: PropTypes.string,
+      mime: PropTypes.string,
+      ext: PropTypes.string,
+    })
+  ).isRequired,
+  >>>>>>> add-asset-to-pending
   onClose: PropTypes.func.isRequired,
 };

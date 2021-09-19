@@ -11,8 +11,15 @@ const Steps = {
 
 export const UploadAssetDialog = ({ onSuccess, onClose }) => {
   const [step, setStep] = useState(Steps.AddAsset);
+  <<<<<<< chore/test-config
 
   const handleAddToPendingAssets = () => {
+  =======
+  const [assets, setAssets] = useState([]);
+
+  const handleAddToPendingAssets = nextAssets => {
+    setAssets(prevAssets => prevAssets.concat(nextAssets));
+  >>>>>>> add-asset-to-pending
     setStep(Steps.PendingAsset);
     onSuccess();
   };
@@ -22,7 +29,11 @@ export const UploadAssetDialog = ({ onSuccess, onClose }) => {
       {step === Steps.AddAsset && (
         <AddAssetStep onClose={onClose} onAddAsset={handleAddToPendingAssets} />
       )}
+  <<<<<<< chore/test-config
       {step === Steps.PendingAsset && <PendingAssetStep onClose={onClose} />}
+  =======
+      {step === Steps.PendingAsset && <PendingAssetStep onClose={onClose} assets={assets} />}
+  >>>>>>> add-asset-to-pending
     </ModalLayout>
   );
 };

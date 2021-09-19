@@ -11,10 +11,13 @@
   <<<<<<< advanced-settings-trad
     "test": "echo \"no tests yet\"",
     "develop": "cross-env NODE_ENV=development webpack serve --config webpack.config.dev.js --progress profile",
+  <<<<<<< chore/test-config
   =======
     "test:front": "jest --config jest.config.front.js",
     "develop": "webpack serve --config webpack.config.dev.js --progress profile",
   >>>>>>> chore/test-config
+  =======
+  >>>>>>> add-asset-to-pending
     "develop:ce": "STRAPI_DISABLE_EE=true webpack serve --config webpack.config.dev.js --progress profile",
     "analyze:bundle": "ANALYZE_BUNDLE=true webpack --config webpack.config.dev.js",
     "analyze:deps": "ANALYZE_DEPS=true webpack serve --config webpack.config.dev.js --progress profile"

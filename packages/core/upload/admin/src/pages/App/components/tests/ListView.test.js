@@ -520,10 +520,14 @@ describe('MediaLibrary / ListView', () => {
                       >
                         png
                       </span>
+  <<<<<<< chore/test-config
                        - 
                       551
                       ✕
                       1066
+  =======
+                      - 551✕1066
+  >>>>>>> add-asset-to-pending
                     </div>
                   </div>
                   <div
