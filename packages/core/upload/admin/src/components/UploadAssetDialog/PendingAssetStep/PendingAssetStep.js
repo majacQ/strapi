@@ -9,6 +9,11 @@ import { Stack } from '@strapi/parts/Stack';
 import { Grid, GridItem } from '@strapi/parts/Grid';
 import { KeyboardNavigable } from '@strapi/parts/KeyboardNavigable';
 import { DocAssetCard } from '../../AssetCard/DocAssetCard';
+  <<<<<<< chore/test-config
+import { getTrad } from '../../../utils';
+
+export const PendingAssetStep = ({ onClose }) => {
+  =======
 import { ImageAssetCard } from '../../AssetCard/ImageAssetCard';
 import { VideoAssetCard } from '../../AssetCard/VideoAssetCard';
 import { UnknownAssetCard } from '../../AssetCard/UnknownAssetCard';
@@ -16,6 +21,7 @@ import { getTrad } from '../../../utils';
 import { AssetType, AssetSource } from '../../../constants';
 
 export const PendingAssetStep = ({ onClose, assets }) => {
+  >>>>>>> add-asset-to-pending
   const { formatMessage } = useIntl();
 
   return (
@@ -58,6 +64,16 @@ export const PendingAssetStep = ({ onClose, assets }) => {
           </Row>
           <KeyboardNavigable tagName="article">
             <Grid gap={4}>
+  <<<<<<< chore/test-config
+              {Array(20)
+                .fill(null)
+                .map((_, idx) => (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <GridItem col={3} key={`grid-item-${idx}`}>
+                    <DocAssetCard name="This is a test" extension="pdf" />
+                  </GridItem>
+                ))}
+  =======
               {assets.map((asset, idx) => {
                 const assetKey = `${asset.url}-${idx}`;
 
@@ -104,6 +120,7 @@ export const PendingAssetStep = ({ onClose, assets }) => {
                   </GridItem>
                 );
               })}
+  >>>>>>> add-asset-to-pending
             </Grid>
           </KeyboardNavigable>
         </Stack>
@@ -132,6 +149,8 @@ export const PendingAssetStep = ({ onClose, assets }) => {
 };
 
 PendingAssetStep.propTypes = {
+  <<<<<<< chore/test-config
+  =======
   assets: PropTypes.arrayOf(
     PropTypes.shape({
       source: PropTypes.oneOf(Object.values(AssetSource)),
@@ -141,5 +160,6 @@ PendingAssetStep.propTypes = {
       ext: PropTypes.string,
     })
   ).isRequired,
+  >>>>>>> add-asset-to-pending
   onClose: PropTypes.func.isRequired,
 };

@@ -1,35 +1,7 @@
-const IS_EE = process.env.IS_EE === 'true';
-
-const moduleNameMapper = {
-  '.*\\.(css|less|styl|scss|sass)$': '<rootDir>/test/config/front/mocks/cssModule.js',
-  '.*\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga|ico)$':
-    '<rootDir>/test/config/front/mocks/image.js',
-  '^ee_else_ce(/.*)$': [
-    '<rootDir>/packages/core/admin/admin/src$1',
-    '<rootDir>/packages/core/content-manager/admin/src$1',
-    '<rootDir>/packages/core/content-type-builder/admin/src$1',
-    '<rootDir>/packages/core/upload/admin/src$1',
-    '<rootDir>/packages/core/email/admin/src$1',
-    '<rootDir>/packages/plugins/*/admin/src$1',
-  ],
-};
-
-if (IS_EE) {
-  const rootDirEE = [
-    '<rootDir>/packages/core/admin/ee/admin$1',
-    '<rootDir>/packages/core/content-manager/ee/admin/src$1',
-    '<rootDir>/packages/core/content-type-builder/ee/admin/src$1',
-    '<rootDir>/packages/core/upload/ee/admin/src$1',
-    '<rootDir>/packages/core/email/ee/admin/src$1',
-    '<rootDir>/packages/plugins/*/ee/admin/src$1',
-  ];
-
-  Object.assign(moduleNameMapper, {
-    '^ee_else_ce(/.*)$': rootDirEE,
-  });
-}
+const baseConfig = require('./jest.base-config.front');
 
 module.exports = {
+  <<<<<<< advanced-settings-trad
   collectCoverageFrom: [
     'packages/core/*/admin/src/**/*.js',
     'packages/plugins/*/admin/src/**/*.js',
@@ -72,13 +44,11 @@ module.exports = {
   setupFilesAfterEnv: [
     '<rootDir>/test/config/front/enzyme-setup.js',
     '<rootDir>/test/config/front/strapi.js',
+  =======
+  ...baseConfig,
+  projects: [
+    '<rootDir>/packages/core/*/jest.config.front.js',
+    '<rootDir>/packages/plugins/*/jest.config.front.js',
+  >>>>>>> chore/test-config
   ],
-  testRegex: 'tests/.*\\.test\\.js$',
-  transform: {
-    '^.+\\.js$': ['@swc-node/jest', { jsx: true, dynamicImport: true }],
-    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$':
-      '<rootDir>/fileTransformer.js',
-  },
-  transformIgnorePatterns: ['node_modules/(?!(react-dnd|dnd-core|react-dnd-html5-backend)/)'],
-  testURL: 'http://localhost:4000/admin',
 };

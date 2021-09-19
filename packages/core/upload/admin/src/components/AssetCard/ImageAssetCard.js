@@ -41,8 +41,12 @@ export const ImageAssetCard = ({ name, extension, height, width, thumbnail }) =>
         <CardContent>
           <CardTitle as="h2">{name}</CardTitle>
           <CardSubtitle>
+  <<<<<<< chore/test-config
+            <Extension>{extension}</Extension> - {height}✕{width}
+  =======
             <Extension>{extension}</Extension>
             {height && width && `- ${height}✕${width}`}
+  >>>>>>> add-asset-to-pending
           </CardSubtitle>
         </CardContent>
         <CardBadge>
@@ -53,6 +57,13 @@ export const ImageAssetCard = ({ name, extension, height, width, thumbnail }) =>
   );
 };
 
+  <<<<<<< chore/test-config
+ImageAssetCard.propTypes = {
+  extension: PropTypes.string.isRequired,
+  height: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  width: PropTypes.number.isRequired,
+ =======
 ImageAssetCard.defaultProps = {
   height: undefined,
   width: undefined,
@@ -63,5 +74,6 @@ ImageAssetCard.propTypes = {
   height: PropTypes.number,
   name: PropTypes.string.isRequired,
   width: PropTypes.number,
+  >>>>>>> add-asset-to-pending
   thumbnail: PropTypes.string.isRequired,
 };
