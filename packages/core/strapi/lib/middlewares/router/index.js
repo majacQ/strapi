@@ -1,64 +1,95 @@
 'use strict';
 
-/**
- * Module dependencies
- */
-
-// Public node modules.
 const _ = require('lodash');
-const Router = require('koa-router');
-const createEndpointComposer = require('./utils/composeEndpoint');
-/**
- * Router hook
- */
+const { toLower } = require('lodash/fp');
+
+const createRouteScopeGenerator = namespace => route => {
+  const prefix = namespace.endsWith('::') ? namespace : `${namespace}.`;
+
+  if (typeof route.handler === 'string') {
+    const [controller, action] = route.handler.split('.');
+
+    _.defaultsDeep(route.config, {
+      auth: {
+        scope: `${prefix}${controller}.${toLower(action)}`,
+      },
+    });
+  }
+};
 
 module.exports = strapi => {
-  const composeEndpoint = createEndpointComposer(strapi);
+  const registerAdminRoutes = () => {
+    const generateRouteScope = createRouteScopeGenerator(`admin::`);
+
+    strapi.admin.routes.forEach(route => {
+      generateRouteScope(route);
+      route.info = { pluginName: 'admin' };
+    });
+
+    strapi.server.routes({
+      type: 'admin',
+      prefix: '/admin',
+      routes: strapi.admin.routes,
+    });
+  };
+
+  const registerPluginRoutes = () => {
+    for (const pluginName in strapi.plugins) {
+      const plugin = strapi.plugins[pluginName];
+
+      const generateRouteScope = createRouteScopeGenerator(`plugin::${pluginName}`);
+
+      if (Array.isArray(plugin.routes)) {
+        plugin.routes.forEach(route => {
+          generateRouteScope(route);
+          route.info = { pluginName };
+        });
+
+        strapi.server.routes({
+          type: 'admin',
+          prefix: `/${pluginName}`,
+          routes: plugin.routes,
+        });
+      } else {
+        _.forEach(plugin.routes, router => {
+          router.type = router.type || 'admin';
+          router.prefix = `/${pluginName}`;
+          router.routes.forEach(route => {
+            generateRouteScope(route);
+            route.info = { pluginName };
+          });
+
+          strapi.server.routes(router);
+        });
+      }
+    }
+  };
+
+  const registerAPIRoutes = () => {
+    for (const apiName in strapi.api) {
+      const api = strapi.api[apiName];
+
+      const generateRouteScope = createRouteScopeGenerator(`api::${apiName}`);
+
+      _.forEach(api.routes, router => {
+        // TODO: remove once auth setup
+        // pass meta down to compose endpoint
+        router.type = 'content-api';
+        router.routes.forEach(route => {
+          generateRouteScope(route);
+          route.info = { apiName };
+        });
+
+        return strapi.server.routes(router);
+      });
+    }
+  };
 
   return {
-    /**
-     * Initialize the hook
-     */
-
     initialize() {
-      _.forEach(strapi.config.routes, value => {
-        composeEndpoint(value, { router: strapi.router });
-      });
-
-      strapi.router.prefix(strapi.config.get('middleware.settings.router.prefix', ''));
-
-      if (_.has(strapi.admin, 'config.routes')) {
-        const router = new Router({
-          prefix: '/admin',
-        });
-
-        _.get(strapi.admin, 'config.routes', []).forEach(route => {
-          composeEndpoint(route, { plugin: 'admin', router });
-        });
-
-        // Mount admin router on Strapi router
-        strapi.app.use(router.routes()).use(router.allowedMethods());
-      }
-
-      if (strapi.plugins) {
-        // Parse each plugin's routes.
-        _.forEach(strapi.plugins, (plugin, pluginName) => {
-          const router = new Router({
-            prefix: `/${pluginName}`,
-          });
-
-          (plugin.config.routes || []).forEach(route => {
-            const hasPrefix = _.has(route.config, 'prefix');
-            composeEndpoint(route, {
-              plugin: pluginName,
-              router: hasPrefix ? strapi.router : router,
-            });
-          });
-
-          // Mount plugin router
-          strapi.app.use(router.routes()).use(router.allowedMethods());
-        });
-      }
+      registerAdminRoutes();
+      registerAPIRoutes();
+      registerPluginRoutes();
     },
   };
 };

@@ -11,12 +11,25 @@ module.exports = async (ctx, next) => {
     return ctx.send({ error: 'contentType.notFound' }, 404);
   }
 
-  const target = ct.plugin === 'admin' ? strapi.admin : strapi.plugins[ct.plugin];
+  const target = ct.plugin === 'admin' ? strapi.admin : strapi.plugin(ct.plugin);
 
-  const actionPath = ['config', 'layout', ct.modelName, 'actions', ctx.request.route.action];
+  const { route } = ctx.state;
 
-  if (_.has(target, actionPath)) {
-    const [controller, action] = _.get(target, actionPath, []).split('.');
+  if (typeof route.handler !== 'string') {
+    return next();
+  }
+
+  const [, action] = route.handler.split('.');
+
+  const configPath =
+    ct.plugin === 'admin'
+      ? ['server.admin.layout', ct.modelName, 'actions', action]
+      : ['plugin', ct.plugin, 'layout', ct.modelName, 'actions', action];
+
+  const actionConfig = strapi.config.get(configPath);
+
+  if (!_.isNil(actionConfig)) {
+    const [controller, action] = actionConfig.split('.');
 
     if (controller && action) {
       return await target.controllers[controller.toLowerCase()][action](ctx);

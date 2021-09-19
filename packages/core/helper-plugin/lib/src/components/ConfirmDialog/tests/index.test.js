@@ -6,8 +6,8 @@ import ConfirmDialog from '../index';
 
 const App = (
   <ThemeProvider theme={lightTheme}>
-    <IntlProvider locale="en" messages={{ en: {} }} textComponent="span">
-      <ConfirmDialog isVisible onConfirm={jest.fn()} onToggleDialog={jest.fn()} />
+    <IntlProvider locale="en" messages={{}} defaultLocale="en" textComponent="span">
+      <ConfirmDialog isOpen onConfirm={jest.fn()} onToggleDialog={jest.fn()} />
     </IntlProvider>
   </ThemeProvider>
 );
@@ -36,16 +36,19 @@ describe('ConfirmDialog', () => {
       >
         <p
           aria-live="polite"
+          aria-relevant="all"
           id="live-region-log"
           role="log"
         />
         <p
           aria-live="polite"
+          aria-relevant="all"
           id="live-region-status"
           role="status"
         />
         <p
           aria-live="assertive"
+          aria-relevant="all"
           id="live-region-alert"
           role="alert"
         />
@@ -56,13 +59,13 @@ describe('ConfirmDialog', () => {
   it('renders and matches the snapshot', async () => {
     const AppCustom = (
       <ThemeProvider theme={lightTheme}>
-        <IntlProvider locale="en" messages={{ en: {} }} textComponent="span">
+        <IntlProvider locale="en" messages={{}} textComponent="span">
           <ConfirmDialog
             bodyText={{
               id: 'app.components',
               defaultMessage: 'Are you sure you want to unpublish it?',
             }}
-            isVisible
+            isOpen
             onConfirm={jest.fn()}
             onToggleDialog={jest.fn()}
             title={{ id: 'app.components.ConfirmDialog.title', defaultMessage: 'Confirmation' }}

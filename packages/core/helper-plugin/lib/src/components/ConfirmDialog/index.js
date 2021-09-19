@@ -14,19 +14,15 @@ const ConfirmDialog = ({
   iconRightButton,
   iconBody,
   isConfirmButtonLoading,
-  isVisible,
   leftButtonText,
   onToggleDialog,
   onConfirm,
   rightButtonText,
   title,
   variantRightButton,
+  ...props
 }) => {
   const { formatMessage } = useIntl();
-
-  if (!isVisible) {
-    return null;
-  }
 
   return (
     <Dialog
@@ -37,6 +33,7 @@ const ConfirmDialog = ({
       })}
       labelledBy="confirmation"
       describedBy="confirm-description"
+      {...props}
     >
       <DialogBody icon={iconBody}>
         <Stack size={2}>
@@ -109,7 +106,6 @@ ConfirmDialog.propTypes = {
   iconBody: PropTypes.node,
   iconRightButton: PropTypes.node,
   isConfirmButtonLoading: PropTypes.bool,
-  isVisible: PropTypes.bool.isRequired,
   onConfirm: PropTypes.func.isRequired,
   onToggleDialog: PropTypes.func.isRequired,
   leftButtonText: PropTypes.shape({

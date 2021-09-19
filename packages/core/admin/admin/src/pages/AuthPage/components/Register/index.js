@@ -16,6 +16,7 @@ import {
   Checkbox,
   Link,
   Row,
+  Button,
 } from '@strapi/parts';
 import { Form, useQuery, useNotification } from '@strapi/helper-plugin';
 import { useHistory } from 'react-router-dom';
@@ -27,7 +28,6 @@ import UnauthenticatedLayout, {
   LayoutContent,
 } from '../../../../layouts/UnauthenticatedLayout';
 import Logo from '../Logo';
-import AuthButton from '../AuthButton';
 import FieldActionWrapper from '../FieldActionWrapper';
 
 const CenteredBox = styled(Box)`
@@ -106,18 +106,18 @@ const Register = ({ fieldsToDisable, noSignin, onSubmit, schema }) => {
         >
           {({ values, errors, handleChange }) => (
             <Form noValidate>
-              <Main labelledBy="welcome">
+              <Main>
                 <Column>
                   <Logo />
-                  <Box paddingTop="6" paddingBottom="1">
-                    <H1 id="welcome">
+                  <Box paddingTop={6} paddingBottom={1}>
+                    <H1>
                       {formatMessage({
                         id: 'Auth.form.welcome.title',
                         defaultMessage: 'Welcome back!',
                       })}
                     </H1>
                   </Box>
-                  <CenteredBox paddingBottom="7">
+                  <CenteredBox paddingBottom={7}>
                     <Subtitle textColor="neutral600">
                       {formatMessage({
                         id: 'Auth.form.register.subtitle',
@@ -308,12 +308,12 @@ const Register = ({ fieldsToDisable, noSignin, onSubmit, schema }) => {
                       }
                     )}
                   </Checkbox>
-                  <AuthButton size="L" type="submit">
+                  <Button fullWidth size="L" type="submit">
                     {formatMessage({
                       id: 'Auth.form.button.register',
                       defaultMessage: "Let's start",
                     })}
-                  </AuthButton>
+                  </Button>
                 </Stack>
               </Main>
             </Form>

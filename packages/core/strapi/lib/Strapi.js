@@ -1,29 +1,38 @@
 'use strict';
 
-const Koa = require('koa');
-const Router = require('koa-router');
 const _ = require('lodash');
 const { createLogger } = require('@strapi/logger');
 const { Database } = require('@strapi/database');
 
 const loadConfiguration = require('./core/app-configuration');
-const { createHTTPServer } = require('./server');
+
 const { createContainer } = require('./container');
-const loadModules = require('./core/load-modules');
 const utils = require('./utils');
-const bootstrap = require('./core/bootstrap');
 const initializeMiddlewares = require('./middlewares');
-const createStrapiFs = require('./core/fs');
+const createStrapiFs = require('./services/fs');
 const createEventHub = require('./services/event-hub');
+const { createServer } = require('./services/server');
 const createWebhookRunner = require('./services/webhook-runner');
 const { webhookModel, createWebhookStore } = require('./services/webhook-store');
 const { createCoreStore, coreStoreModel } = require('./services/core-store');
 const createEntityService = require('./services/entity-service');
 const entityValidator = require('./services/entity-validator');
 const createTelemetry = require('./services/metrics');
+const createAuth = require('./services/auth');
 const createUpdateNotifier = require('./utils/update-notifier');
 const createStartupLogger = require('./utils/startup-logger');
 const ee = require('./utils/ee');
+const contentTypesRegistry = require('./core/registries/content-types');
+const servicesRegistry = require('./core/registries/services');
+const policiesRegistry = require('./core/registries/policies');
+const middlewaresRegistry = require('./core/registries/middlewares');
+const controllersRegistry = require('./core/registries/controllers');
+const modulesRegistry = require('./core/registries/modules');
+const pluginsRegistry = require('./core/registries/plugins');
+const createConfigProvider = require('./core/registries/config');
+const apisRegistry = require('./core/registries/apis');
+const bootstrap = require('./core/bootstrap');
+const loaders = require('./core/loaders');
 
 const LIFECYCLES = {
   REGISTER: 'register',
@@ -32,37 +41,78 @@ const LIFECYCLES = {
 
 class Strapi {
   constructor(opts = {}) {
-    this.container = createContainer(this);
-
     this.dir = opts.dir || process.cwd();
-    this.config = loadConfiguration(this.dir, opts);
-
-    this.reload = this.reload();
-
-    // Expose `koa`.
-    this.app = new Koa();
-    this.router = new Router();
-
-    this.server = createHTTPServer(this, this.app);
-
-    this.app.proxy = this.config.get('server.proxy');
-
-    // Logger.
-    const loggerUserConfiguration = this.config.get('logger', {});
-    this.log = createLogger(loggerUserConfiguration);
+    const appConfig = loadConfiguration(this.dir, opts);
+    this.container = createContainer(this);
+    this.container.register('config', createConfigProvider(appConfig));
+    this.container.register('content-types', contentTypesRegistry(this));
+    this.container.register('services', servicesRegistry(this));
+    this.container.register('policies', policiesRegistry(this));
+    this.container.register('middlewares', middlewaresRegistry(this));
+    this.container.register('controllers', controllersRegistry(this));
+    this.container.register('modules', modulesRegistry(this));
+    this.container.register('plugins', pluginsRegistry(this));
+    this.container.register('apis', apisRegistry(this));
+    this.container.register('auth', createAuth(this));
 
     this.isLoaded = false;
+    this.reload = this.reload();
+    this.server = createServer(this);
 
-    // internal services.
     this.fs = createStrapiFs(this);
     this.eventHub = createEventHub();
     this.startupLogger = createStartupLogger(this);
+    this.log = createLogger(this.config.get('logger', {}));
 
     createUpdateNotifier(this).notify();
   }
 
+  get config() {
+    return this.container.get('config');
+  }
+
   get EE() {
     return ee({ dir: this.dir, logger: this.log });
+  }
+
+  service(uid) {
+    return this.container.get('services').get(uid);
+  }
+
+  controller(uid) {
+    return this.container.get('controllers').get(uid);
+  }
+
+  contentType(name) {
+    return this.container.get('content-types').get(name);
+  }
+
+  get contentTypes() {
+    return this.container.get('content-types').getAll();
+  }
+
+  policy(name) {
+    return this.container.get('policies').get(name);
+  }
+
+  middleware(name) {
+    return this.container.get('middlewares').get(name);
+  }
+
+  plugin(name) {
+    return this.container.get('plugins').get(name);
+  }
+
+  get plugins() {
+    return this.container.get('plugins').getAll();
+  }
+
+  // api(name) {
+  //   return this.container.get('apis').get(name);
+  // }
+
+  get api() {
+    return this.container.get('apis').getAll();
   }
 
   async start() {
@@ -71,14 +121,11 @@ class Strapi {
         await this.load();
       }
 
-      this.app.use(this.router.routes()).use(this.router.allowedMethods());
-
-      // Launch server.
       await this.listen();
 
       return this;
     } catch (error) {
-      return this.stopWithError(error.message);
+      return this.stopWithError(error);
     }
   }
 
@@ -123,7 +170,7 @@ class Strapi {
 
   async openAdmin({ isInitialized }) {
     const shouldOpenAdmin =
-      this.config.environment === 'development' &&
+      this.config.get('environment') === 'development' &&
       this.config.get('server.admin.autoOpen', true) !== false;
 
     if (shouldOpenAdmin || !isInitialized) {
@@ -183,7 +230,7 @@ class Strapi {
   stop(exitCode = 1) {
     this.server.destroy();
 
-    if (this.config.autoReload) {
+    if (this.config.get('autoReload')) {
       process.send('stop');
     }
 
@@ -191,33 +238,39 @@ class Strapi {
     process.exit(exitCode);
   }
 
-  loadAdmin() {
-    this.admin = require('@strapi/admin/strapi-server');
+  async loadAdmin() {
+    await loaders.loadAdmin(this);
+  }
 
-    // TODO: rename into just admin and ./config/admin.js
-    const userAdminConfig = strapi.config.get('server.admin');
-    this.config.set('server.admin', _.merge(this.admin.config, userAdminConfig));
+  async loadPlugins() {
+    await loaders.loadPlugins(this);
+  }
+
+  async loadPolicies() {
+    await loaders.loadPolicies(this);
+  }
+
+  async loadAPIs() {
+    await loaders.loadAPIs(this);
+  }
+
+  async loadComponents() {
+    this.components = await loaders.loadComponents(this);
+  }
+
+  async loadMiddlewares() {
+    this.middleware = await loaders.loadMiddlewares(this);
   }
 
   async load() {
-    this.app.use(async (ctx, next) => {
-      if (ctx.request.url === '/_health' && ['HEAD', 'GET'].includes(ctx.request.method)) {
-        ctx.set('strapi', 'You are so French!');
-        ctx.status = 204;
-      } else {
-        await next();
-      }
-    });
-
-    const modules = await loadModules(this);
-
-    this.loadAdmin();
-
-    this.api = modules.api;
-    this.components = modules.components;
-    this.plugins = modules.plugins;
-    this.middleware = modules.middlewares;
-    this.hook = modules.hook;
+    await Promise.all([
+      this.loadPlugins(),
+      this.loadAdmin(),
+      this.loadAPIs(),
+      this.loadComponents(),
+      this.loadMiddlewares(),
+      this.loadPolicies(),
+    ]);
 
     await bootstrap(this);
 
@@ -245,7 +298,7 @@ class Strapi {
     await this.db.schema.sync();
 
     this.store = createCoreStore({
-      environment: this.config.environment,
+      environment: this.config.get('environment'),
       db: this.db,
     });
 
@@ -265,11 +318,12 @@ class Strapi {
     this.telemetry = createTelemetry(this);
 
     // Initialize middlewares.
-    await initializeMiddlewares.call(this);
+    await initializeMiddlewares(this);
 
     await this.runLifecyclesFunctions(LIFECYCLES.BOOTSTRAP);
 
     this.isLoaded = true;
+
     return this;
   }
 
@@ -291,7 +345,7 @@ class Strapi {
         return;
       }
 
-      if (this.config.autoReload) {
+      if (this.config.get('autoReload')) {
         this.server.destroy();
         process.send('reload');
       }
@@ -324,34 +378,19 @@ class Strapi {
         return;
       }
 
-      return fn();
+      return fn({ strapi: this });
     };
 
     const configPath = `functions.${lifecycleName}`;
 
     // plugins
-    await Promise.all(
-      Object.keys(this.plugins).map(plugin => {
-        const pluginFunc = _.get(this.plugins[plugin], `config.${configPath}`);
-
-        return execLifecycle(pluginFunc).catch(err => {
-          strapi.log.error(`${lifecycleName} function in plugin "${plugin}" failed`);
-          console.error(err);
-          strapi.stop();
-        });
-      })
-    );
+    await this.container.get('modules')[lifecycleName]();
 
     // user
-    await execLifecycle(_.get(this.config, configPath));
+    await execLifecycle(this.config.get(configPath));
 
     // admin
-    const adminFunc = _.get(this.admin.config, configPath);
-    return execLifecycle(adminFunc).catch(err => {
-      strapi.log.error(`${lifecycleName} function in admin failed`);
-      console.error(err);
-      strapi.stop();
-    });
+    await this.admin[lifecycleName](this);
   }
 
   getModel(uid) {

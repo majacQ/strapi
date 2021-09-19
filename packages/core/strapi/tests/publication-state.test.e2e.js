@@ -1,7 +1,7 @@
 'use strict';
 
 const { createStrapiInstance } = require('../../../../test/helpers/strapi');
-const { createAuthRequest } = require('../../../../test/helpers/request');
+const { createContentAPIRequest } = require('../../../../test/helpers/request');
 const { createTestBuilder } = require('../../../../test/helpers/builder');
 
 const builder = createTestBuilder();
@@ -58,7 +58,7 @@ const contentTypes = {
       categories: {
         type: 'relation',
         relation: 'oneToMany',
-        target: 'application::category.category',
+        target: 'api::category.category',
       },
       comp: {
         component: 'default.comp',
@@ -102,7 +102,7 @@ const components = {
       countries: {
         type: 'relation',
         relation: 'oneToMany',
-        target: 'application::country.country',
+        target: 'api::country.country',
       },
     },
   },
@@ -152,9 +152,7 @@ describe('Publication State', () => {
       .build();
 
     strapi = await createStrapiInstance();
-    rq = await createAuthRequest({ strapi });
-
-    console.log(JSON.stringify(builder.sanitizedFixtures(strapi), null, 2));
+    rq = await createContentAPIRequest({ strapi });
 
     Object.assign(data, builder.sanitizedFixtures(strapi));
   });

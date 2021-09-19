@@ -2,13 +2,12 @@ import React from 'react';
 import { useIntl } from 'react-intl';
 import PropTypes from 'prop-types';
 import { Form } from '@strapi/helper-plugin';
-import { Box, Stack, H1, Text, TextInput, Main, Row, Link } from '@strapi/parts';
+import { Box, Stack, H1, Text, TextInput, Main, Row, Link, Button } from '@strapi/parts';
 import { Formik } from 'formik';
 import UnauthenticatedLayout, {
   Column,
   LayoutContent,
 } from '../../../../layouts/UnauthenticatedLayout';
-import AuthButton from '../AuthButton';
 import Logo from '../Logo';
 
 const ForgotPassword = ({ onSubmit, schema }) => {
@@ -16,7 +15,7 @@ const ForgotPassword = ({ onSubmit, schema }) => {
 
   return (
     <UnauthenticatedLayout>
-      <Main labelledBy="password-forgotten">
+      <Main>
         <LayoutContent>
           <Formik
             enableReinitialize
@@ -31,8 +30,8 @@ const ForgotPassword = ({ onSubmit, schema }) => {
               <Form noValidate>
                 <Column>
                   <Logo />
-                  <Box paddingTop="6" paddingBottom="7">
-                    <H1 id="password-forgotten">
+                  <Box paddingTop={6} paddingBottom={7}>
+                    <H1>
                       {formatMessage({
                         id: 'Auth.form.button.password-forgotten',
                         defaultMessage: 'Password forgotten',
@@ -69,12 +68,12 @@ const ForgotPassword = ({ onSubmit, schema }) => {
                     name="email"
                     required
                   />
-                  <AuthButton type="submit">
+                  <Button type="submit" fullWidth>
                     {formatMessage({
                       id: 'Auth.form.button.forgot-password',
                       defaultMessage: 'Send Email',
                     })}
-                  </AuthButton>
+                  </Button>
                 </Stack>
               </Form>
             )}

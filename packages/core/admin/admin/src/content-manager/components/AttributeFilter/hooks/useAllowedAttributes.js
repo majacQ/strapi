@@ -1,7 +1,7 @@
 import get from 'lodash/get';
 import { useRBACProvider, findMatchingPermissions } from '@strapi/helper-plugin';
 
-const NOT_ALLOWED_FILTERS = ['json', 'component', 'media', 'richtext', 'dynamiczone'];
+const NOT_ALLOWED_FILTERS = ['json', 'component', 'media', 'richtext', 'dynamiczone', 'password'];
 
 const useAllowedAttributes = (contentType, slug) => {
   const { allPermissions } = useRBACProvider();
@@ -14,7 +14,7 @@ const useAllowedAttributes = (contentType, slug) => {
 
   const readPermissionsForSlug = findMatchingPermissions(allPermissions, [
     {
-      action: 'plugins::content-manager.explorer.read',
+      action: 'plugin::content-manager.explorer.read',
       subject: slug,
     },
   ]);
