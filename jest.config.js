@@ -1,14 +1,9 @@
+'use strict';
+
 module.exports = {
-  name: 'setup',
-  displayName: 'Setup',
-  testMatch: ['**/test/?(*.)+(spec|test).js'],
-  testPathIgnorePatterns: [
-    '<rootDir>/packages/',
-  ],
-  coveragePathIgnorePatterns: [
-    '<rootDir>/dist/',
-    '<rootDir>/node_modules/',
-    '<rootDir>/out-tsc/',
-    '<rootDir>/test/'
-  ]
+  name: 'Unit test',
+  testMatch: ['<rootDir>/packages/**/__tests__/?(*.)+(spec|test).js'],
+  modulePathIgnorePatterns: ['.cache'],
+  transform: {},
+  setupFilesAfterEnv: ['<rootDir>/test/unit.setup.js'],
 };
