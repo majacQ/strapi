@@ -10,9 +10,7 @@ import { IntlProvider } from 'react-intl';
 import { ThemeProvider, lightTheme } from '@strapi/parts';
 import FormModal from '../index';
 
-const messages = {
-  en: {},
-};
+const messages = {};
 
 const makeApp = (layout = { forms: [], schema: {} }, isOpen = false) => {
   return (
@@ -57,16 +55,19 @@ describe('<FormModal />', () => {
       >
         <p
           aria-live="polite"
+          aria-relevant="all"
           id="live-region-log"
           role="log"
         />
         <p
           aria-live="polite"
+          aria-relevant="all"
           id="live-region-status"
           role="status"
         />
         <p
           aria-live="assertive"
+          aria-relevant="all"
           id="live-region-alert"
           role="alert"
         />

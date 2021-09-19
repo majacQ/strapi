@@ -2,7 +2,7 @@
 
 const { createTestBuilder } = require('../../../../../test/helpers/builder');
 const { createStrapiInstance } = require('../../../../../test/helpers/strapi');
-const { createAuthRequest } = require('../../../../../test/helpers/request');
+const { createContentAPIRequest } = require('../../../../../test/helpers/request');
 
 let strapi;
 let rq;
@@ -58,7 +58,9 @@ const createEntry = () => {
   return rq({
     method: 'POST',
     url: '/',
-    body: defaultBody,
+    body: {
+      data: defaultBody,
+    },
   });
 };
 
@@ -67,7 +69,9 @@ const createEmpty = () => {
     method: 'POST',
     url: '/',
     body: {
-      field: [],
+      data: {
+        field: [],
+      },
     },
   });
 };
@@ -83,8 +87,8 @@ describe('Not required dynamiczone', () => {
       .build();
 
     strapi = await createStrapiInstance();
-    rq = await createAuthRequest({ strapi });
-    rq.setURLPrefix('/withdynamiczones');
+    rq = await createContentAPIRequest({ strapi });
+    rq.setURLPrefix('/api/withdynamiczones');
   });
 
   afterAll(async () => {
@@ -98,18 +102,20 @@ describe('Not required dynamiczone', () => {
         method: 'POST',
         url: '/',
         body: {
-          field: [
-            {
-              __component: 'default.simple-compo',
-              name: 'someString',
-            },
-            {
-              __component: 'default.compo-with-other-compo',
-              compo: {
+          data: {
+            field: [
+              {
+                __component: 'default.simple-compo',
                 name: 'someString',
               },
-            },
-          ],
+              {
+                __component: 'default.compo-with-other-compo',
+                compo: {
+                  name: 'someString',
+                },
+              },
+            ],
+          },
         },
         qs: {
           populate: ['field.compo'],
@@ -144,7 +150,9 @@ describe('Not required dynamiczone', () => {
         method: 'POST',
         url: '/',
         body: {
-          field: [],
+          data: {
+            field: [],
+          },
         },
         qs: {
           populate: ['field'],
@@ -161,12 +169,14 @@ describe('Not required dynamiczone', () => {
         method: 'POST',
         url: '/',
         body: {
-          field: [
-            {
-              __component: 'default.simple-compo',
-              name: 'someString',
-            },
-          ],
+          data: {
+            field: [
+              {
+                __component: 'default.simple-compo',
+                name: 'someString',
+              },
+            ],
+          },
         },
       });
 
@@ -178,10 +188,12 @@ describe('Not required dynamiczone', () => {
         method: 'POST',
         url: '/',
         body: {
-          field: Array(10).fill({
-            __component: 'default.simple-compo',
-            name: 'someString',
-          }),
+          data: {
+            field: Array(10).fill({
+              __component: 'default.simple-compo',
+              name: 'someString',
+            }),
+          },
         },
       });
 
@@ -267,7 +279,9 @@ describe('Not required dynamiczone', () => {
         method: 'PUT',
         url: `/${entryId}`,
         body: {
-          field: [],
+          data: {
+            field: [],
+          },
         },
         qs: {
           populate: ['field'],
@@ -288,7 +302,9 @@ describe('Not required dynamiczone', () => {
       const res = await rq({
         method: 'PUT',
         url: `/${entryId}`,
-        body: defaultBody,
+        body: {
+          data: defaultBody,
+        },
         qs: {
           populate: ['field.compo'],
         },
@@ -327,16 +343,18 @@ describe('Not required dynamiczone', () => {
         method: 'PUT',
         url: `/${entryId}`,
         body: {
-          field: [
-            {
-              __component: 'default.simple-compo',
-              name: 'otherString',
-            },
-            {
-              __component: 'default.simple-compo',
-              name: 'secondString',
-            },
-          ],
+          data: {
+            field: [
+              {
+                __component: 'default.simple-compo',
+                name: 'otherString',
+              },
+              {
+                __component: 'default.simple-compo',
+                name: 'secondString',
+              },
+            ],
+          },
         },
         qs: {
           populate: ['field'],
@@ -373,12 +391,14 @@ describe('Not required dynamiczone', () => {
         method: 'PUT',
         url: `/${entryId}`,
         body: {
-          field: [
-            {
-              __component: 'default.simple-compo',
-              name: 'otherString',
-            },
-          ],
+          data: {
+            field: [
+              {
+                __component: 'default.simple-compo',
+                name: 'otherString',
+              },
+            ],
+          },
         },
       });
 
@@ -395,10 +415,12 @@ describe('Not required dynamiczone', () => {
         method: 'PUT',
         url: `/${entryId}`,
         body: {
-          field: Array(10).fill({
-            __component: 'default.simple-compo',
-            name: 'otherString',
-          }),
+          data: {
+            field: Array(10).fill({
+              __component: 'default.simple-compo',
+              name: 'otherString',
+            }),
+          },
         },
       });
 

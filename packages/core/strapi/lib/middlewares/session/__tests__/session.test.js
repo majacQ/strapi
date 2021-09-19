@@ -2,7 +2,7 @@
 
 const path = require('path');
 const createMiddleware = require('../index');
-const configProvider = require('../../../core/app-configuration/config-provider');
+const configProvider = require('../../../core/registries/config');
 
 describe('Session middleware', () => {
   beforeEach(() => {
@@ -27,9 +27,12 @@ describe('Session middleware', () => {
     );
 
     const mockStrapi = {
-      app: {
+      server: {
+        app: {
+          use: jest.fn(),
+          context: {},
+        },
         use: jest.fn(),
-        context: {},
       },
       config: {
         appPath: __dirname,

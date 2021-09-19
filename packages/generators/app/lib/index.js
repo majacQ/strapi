@@ -50,13 +50,7 @@ module.exports = (projectDirectory, cliArguments) => {
     installDependencies: true,
     strapiDependencies: [
       '@strapi/strapi',
-      '@strapi/admin',
-      '@strapi/utils',
-      '@strapi/plugin-content-type-builder',
-      '@strapi/plugin-content-manager',
       '@strapi/plugin-users-permissions',
-      '@strapi/plugin-email',
-      '@strapi/plugin-upload',
       '@strapi/plugin-i18n',
     ],
     additionalsDependencies: {},

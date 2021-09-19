@@ -11,15 +11,14 @@ import {
   Main,
   Row,
   Link,
+  Button,
 } from '@strapi/parts';
 import { Form } from '@strapi/helper-plugin';
 import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { Formik } from 'formik';
-
 import { Column, LayoutContent } from '../../../../layouts/UnauthenticatedLayout';
 import Logo from '../Logo';
-import AuthButton from '../AuthButton';
 import FieldActionWrapper from '../FieldActionWrapper';
 
 const Login = ({ onSubmit, schema, children }) => {
@@ -27,7 +26,7 @@ const Login = ({ onSubmit, schema, children }) => {
   const { formatMessage } = useIntl();
 
   return (
-    <Main labelledBy="welcome">
+    <Main>
       <LayoutContent>
         <Formik
           enableReinitialize
@@ -44,15 +43,15 @@ const Login = ({ onSubmit, schema, children }) => {
             <Form noValidate>
               <Column>
                 <Logo />
-                <Box paddingTop="6" paddingBottom="1">
-                  <H1 id="welcome">
+                <Box paddingTop={6} paddingBottom={1}>
+                  <H1>
                     {formatMessage({
                       id: 'Auth.form.welcome.title',
                       defaultMessage: 'Welcome back!',
                     })}
                   </H1>
                 </Box>
-                <Box paddingBottom="7">
+                <Box paddingBottom={7}>
                   <Subtitle textColor="neutral600">
                     {formatMessage({
                       id: 'Auth.form.welcome.subtitle',
@@ -140,9 +139,9 @@ const Login = ({ onSubmit, schema, children }) => {
                     defaultMessage: 'Remember me',
                   })}
                 </Checkbox>
-                <AuthButton type="submit">
+                <Button fullWidth type="submit">
                   {formatMessage({ id: 'Auth.form.button.login', defaultMessage: 'Login' })}
-                </AuthButton>
+                </Button>
               </Stack>
             </Form>
           )}

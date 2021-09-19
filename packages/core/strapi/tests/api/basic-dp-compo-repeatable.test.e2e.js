@@ -4,7 +4,7 @@ const _ = require('lodash');
 
 const { createStrapiInstance } = require('../../../../../test/helpers/strapi');
 const { createTestBuilder } = require('../../../../../test/helpers/builder');
-const { createAuthRequest } = require('../../../../../test/helpers/request');
+const { createContentAPIRequest } = require('../../../../../test/helpers/request');
 
 const builder = createTestBuilder();
 let strapi;
@@ -57,7 +57,7 @@ describe('Core API - Basic + compo + draftAndPublish', () => {
       .build();
 
     strapi = await createStrapiInstance();
-    rq = await createAuthRequest({ strapi });
+    rq = await createContentAPIRequest({ strapi });
   });
 
   afterAll(async () => {
@@ -80,7 +80,9 @@ describe('Core API - Basic + compo + draftAndPublish', () => {
     const { statusCode, body } = await rq({
       method: 'POST',
       url: '/product-with-compo-and-dps',
-      body: product,
+      body: {
+        data: product,
+      },
       qs: {
         populate: ['compo'],
       },
@@ -129,7 +131,9 @@ describe('Core API - Basic + compo + draftAndPublish', () => {
     const { statusCode, body } = await rq({
       method: 'PUT',
       url: `/product-with-compo-and-dps/${data.productsWithCompoAndDP[0].id}`,
-      body: product,
+      body: {
+        data: product,
+      },
       qs: {
         populate: ['compo'],
       },
@@ -170,7 +174,9 @@ describe('Core API - Basic + compo + draftAndPublish', () => {
       const res = await rq({
         method: 'POST',
         url: '/product-with-compo-and-dps',
-        body: product,
+        body: {
+          data: product,
+        },
       });
 
       expect(res.statusCode).toBe(400);
@@ -191,7 +197,9 @@ describe('Core API - Basic + compo + draftAndPublish', () => {
       const res = await rq({
         method: 'POST',
         url: '/product-with-compo-and-dps',
-        body: product,
+        body: {
+          data: product,
+        },
       });
 
       expect(res.statusCode).toBe(400);
@@ -214,7 +222,9 @@ describe('Core API - Basic + compo + draftAndPublish', () => {
       const res = await rq({
         method: 'POST',
         url: '/product-with-compo-and-dps',
-        body: product,
+        body: {
+          data: product,
+        },
       });
 
       expect(res.statusCode).toBe(400);
@@ -236,7 +246,9 @@ describe('Core API - Basic + compo + draftAndPublish', () => {
       const res = await rq({
         method: 'POST',
         url: '/product-with-compo-and-dps',
-        body: product,
+        body: {
+          data: product,
+        },
       });
 
       expect(res.statusCode).toBe(400);

@@ -6,7 +6,7 @@ import ContentBox from '../index';
 
 const App = (
   <ThemeProvider theme={lightTheme}>
-    <IntlProvider locale="en" messages={{ en: {} }} textComponent="span">
+    <IntlProvider locale="en" messages={{}} textComponent="span">
       <ContentBox
         title="Code example"
         subtitle="Learn by testing real project developed by the community"
@@ -23,6 +23,7 @@ describe('ContentBox', () => {
 
     expect(firstChild).toMatchInlineSnapshot(`
       .c0 {
+        background: #ffffff;
         padding: 24px;
         border-radius: 4px;
         box-shadow: 0px 1px 4px rgba(33,33,52,0.1);
@@ -67,22 +68,17 @@ describe('ContentBox', () => {
       }
 
       .c5 {
-        font-weight: 400;
-        font-size: 0.875rem;
-        line-height: 1.43;
+        font-weight: 500;
+        font-size: 0.75rem;
+        line-height: 1.33;
         color: #32324d;
       }
 
-      .c7 {
+      .c6 {
         font-weight: 400;
         font-size: 0.875rem;
         line-height: 1.43;
         color: #666687;
-      }
-
-      .c6 {
-        font-weight: 600;
-        line-height: 1.14;
       }
 
       .c3 {
@@ -107,13 +103,13 @@ describe('ContentBox', () => {
             class="c1"
           >
             <span
-              class="c5 c6"
+              class="c5"
             >
               Code example
             </span>
           </div>
           <span
-            class="c7"
+            class="c6"
           >
             Learn by testing real project developed by the community
           </span>

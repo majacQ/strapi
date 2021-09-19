@@ -27,22 +27,22 @@ export default {
         },
       },
       [
-        // {
-        //   intlLabel: {
-        //     id: getTrad('HeaderNav.link.roles'),
-        //     defaultMessage: 'Roles',
-        //   },
-        //   id: 'roles',
-        //   to: `/settings/${pluginId}/roles`,
-        //   Component: async () => {
-        //     const component = await import(
-        //       /* webpackChunkName: "users-roles-settings-page" */ './pages/Roles'
-        //     );
+        {
+          intlLabel: {
+            id: getTrad('HeaderNav.link.roles'),
+            defaultMessage: 'Roles',
+          },
+          id: 'roles',
+          to: `/settings/${pluginId}/roles`,
+          Component: async () => {
+            const component = await import(
+              /* webpackChunkName: "users-roles-settings-page" */ './pages/Roles'
+            );
 
-        //     return component;
-        //   },
-        //   permissions: pluginPermissions.accessRoles,
-        // },
+            return component;
+          },
+          permissions: pluginPermissions.accessRoles,
+        },
         {
           intlLabel: {
             id: getTrad('HeaderNav.link.providers'),
@@ -76,22 +76,22 @@ export default {
         //   },
         //   permissions: pluginPermissions.readEmailTemplates,
         // },
-        // {
-        //   intlLabel: {
-        //     id: getTrad('HeaderNav.link.advancedSettings'),
-        //     defaultMessage: 'Advanced Settings',
-        //   },
-        //   id: 'advanced-settings',
-        //   to: `/settings/${pluginId}/advanced-settings`,
-        //   Component: async () => {
-        //     const component = await import(
-        //       /* webpackChunkName: "users-advanced-settings-page" */ './pages/AdvancedSettings'
-        //     );
+        {
+          intlLabel: {
+            id: getTrad('HeaderNav.link.advancedSettings'),
+            defaultMessage: 'Advanced Settings',
+          },
+          id: 'advanced-settings',
+          to: `/settings/${pluginId}/advanced-settings`,
+          Component: async () => {
+            const component = await import(
+              /* webpackChunkName: "users-advanced-settings-page" */ './pages/AdvancedSettings'
+            );
 
-        //     return component;
-        //   },
-        //   permissions: pluginPermissions.readAdvancedSettings,
-        // },
+            return component;
+          },
+          permissions: pluginPermissions.readAdvancedSettings,
+        },
       ]
     );
 

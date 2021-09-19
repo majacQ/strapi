@@ -10,9 +10,7 @@ import { IntlProvider } from 'react-intl';
 import { ThemeProvider, lightTheme } from '@strapi/parts';
 import Input from '../index';
 
-const messages = {
-  en: {},
-};
+const messages = {};
 
 const makeApp = (name, type, value) => (
   <IntlProvider locale="en" messages={messages} textComponent="span">
@@ -77,6 +75,7 @@ describe('<Input />', () => {
 
       .c6 {
         border: none;
+        border-radius: 4px;
         padding-left: 16px;
         padding-right: 16px;
         color: #32324d;
@@ -107,24 +106,15 @@ describe('<Input />', () => {
         opacity: 1;
       }
 
-      .c6:disabled {
+      .c6[aria-disabled='true'] {
         background: inherit;
         color: inherit;
-      }
-
-      .c6:focus {
-        outline: none;
       }
 
       .c5 {
         border: 1px solid #dcdce4;
         border-radius: 4px;
         background: #ffffff;
-        overflow: hidden;
-      }
-
-      .c5:focus-within {
-        border: 1px solid #4945ff;
       }
 
       .c1 {
@@ -171,6 +161,7 @@ describe('<Input />', () => {
               class="c4 c5"
             >
               <input
+                aria-disabled="false"
                 aria-invalid="false"
                 aria-label="test"
                 class="c6"

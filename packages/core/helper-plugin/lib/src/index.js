@@ -23,7 +23,6 @@ export { default as HeaderSearch } from './old/components/HeaderSearch';
 export { default as IcoContainer } from './old/components/IcoContainer';
 export { default as InputAddon } from './old/components/InputAddon';
 export { default as EmptyState } from './old/components/EmptyState';
-export { default as Form } from './old/components/Form';
 export * from './old/components/Tabs';
 export * from './old/components/Select';
 
@@ -127,6 +126,7 @@ export { default as useRBACProvider } from './hooks/useRBACProvider';
 export { default as useRBAC } from './hooks/useRBAC';
 export { default as usePersistentState } from './hooks/usePersistentState';
 export { default as useFocusWhenNavigate } from './hooks/useFocusWhenNavigate';
+export { default as useLockScroll } from './hooks/useLockScroll';
 
 // Providers
 export { default as LibraryProvider } from './providers/LibraryProvider';
@@ -145,7 +145,7 @@ export { default as hasPermissions } from './old/utils/hasPermissions';
 export { findMatchingPermissions } from './old/utils/hasPermissions';
 export { default as translatedErrors } from './old/utils/translatedErrors';
 export { darken } from './old/utils/colors';
-export { default as getFileExtension } from './old/utils/getFileExtension';
+export { default as getFileExtension } from './utils/getFileExtension/getFileExtension';
 export { default as getFilterType } from './old/utils/getFilterType';
 export { default as getQueryParameters } from './old/utils/getQueryParameters';
 export { default as validateInput } from './old/utils/inputsValidations';
@@ -158,11 +158,15 @@ export { default as getYupInnerErrors } from './old/utils/getYupInnerErrors';
 export { default as generateFiltersFromSearch } from './old/utils/generateFiltersFromSearch';
 export { default as generateSearchFromFilters } from './old/utils/generateSearchFromFilters';
 export { default as generateSearchFromObject } from './old/utils/generateSearchFromObject';
-export { default as prefixFileUrlWithBackendUrl } from './old/utils/prefixFileUrlWithBackendUrl';
+export { default as prefixFileUrlWithBackendUrl } from './utils/prefixFileUrlWithBackendUrl/prefixFileUrlWithBackendUrl';
 export { default as prefixPluginTranslations } from './old/utils/prefixPluginTranslations';
 
 export { default as pxToRem } from './utils/pxToRem';
 export { default as to } from './utils/await-to-js';
+
+// NEW UTILS
+export { default as setHexOpacity } from './utils/setHexOpacity';
+export { default as customEllipsis } from './utils/customEllipsis';
 
 // SVGS
 export { default as LayoutIcon } from './old/svgs/Layout';
@@ -177,8 +181,12 @@ export { default as CheckPagePermissions } from './components/CheckPagePermissio
 export { default as CheckPermissions } from './components/CheckPermissions';
 export { default as ConfirmDialog } from './components/ConfirmDialog';
 export { default as ContentBox } from './components/ContentBox';
-export { default as CustomContentLayout } from './components/CustomContentLayout';
+export { default as DynamicTable } from './components/DynamicTable';
 export { default as EmptyStateLayout } from './components/EmptyStateLayout';
+export { default as NoContent } from './components/NoContent';
+export { default as NoMedia } from './components/NoMedia';
+export { default as NoPermissions } from './components/NoPermissions';
+export { default as AnErrorOccurred } from './components/AnErrorOccurred';
 export { default as EmptyBodyTable } from './components/EmptyBodyTable';
 export { default as GenericInput } from './components/GenericInput';
 export * from './components/InjectionZone';
@@ -186,6 +194,11 @@ export { default as LoadingIndicatorPage } from './components/LoadingIndicatorPa
 export { default as SettingsPageTitle } from './components/SettingsPageTitle';
 export { default as Search } from './components/Search';
 export { default as Status } from './components/Status';
+export { default as FilterListURLQuery } from './components/FilterListURLQuery';
+export { default as FilterPopoverURLQuery } from './components/FilterPopoverURLQuery';
+export { default as Form } from './components/Form';
+export { default as PaginationURLQuery } from './components/PaginationURLQuery';
+export { default as PageSizeURLQuery } from './components/PageSizeURLQuery';
 
 // New icons
 export { default as SortIcon } from './icons/SortIcon';

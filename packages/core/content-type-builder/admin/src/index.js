@@ -19,16 +19,26 @@ const name = pluginPkg.strapi.name;
 export default {
   register(app) {
     app.addReducers(reducers);
+  <<<<<<< ds-props-update
+
+  =======
+  >>>>>>> core/enable-ctb
     app.addMenuLink({
       to: `/plugins/${pluginId}`,
       icon,
       intlLabel: {
         id: `${pluginId}.plugin.name`,
-        defaultMessage: 'Content-Types Builder',
+        defaultMessage: 'Content Types Builder',
       },
       permissions: pluginPermissions.main,
       Component: async () => {
+  <<<<<<< ds-props-update
+        const component = await import(
+          /* webpackChunkName: "content-type-builder" */ './pages/App'
+        );
+  =======
         const component = await import(/* webpackChunkName: "documentation-page" */ './pages/App');
+  >>>>>>> core/enable-ctb
 
         return component;
       },

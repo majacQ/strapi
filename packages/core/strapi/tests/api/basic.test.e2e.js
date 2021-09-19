@@ -2,7 +2,7 @@
 
 const { createStrapiInstance } = require('../../../../../test/helpers/strapi');
 const { createTestBuilder } = require('../../../../../test/helpers/builder');
-const { createAuthRequest } = require('../../../../../test/helpers/request');
+const { createContentAPIRequest } = require('../../../../../test/helpers/request');
 
 const builder = createTestBuilder();
 let strapi;
@@ -48,7 +48,7 @@ describe('Core API - Basic', () => {
       .build();
 
     strapi = await createStrapiInstance();
-    rq = await createAuthRequest({ strapi });
+    rq = await createContentAPIRequest({ strapi });
   });
 
   afterAll(async () => {
@@ -64,7 +64,9 @@ describe('Core API - Basic', () => {
     const res = await rq({
       method: 'POST',
       url: '/products',
-      body: product,
+      body: {
+        data: product,
+      },
     });
 
     const { statusCode, body } = res;
@@ -117,7 +119,9 @@ describe('Core API - Basic', () => {
     const res = await rq({
       method: 'PUT',
       url: `/products/${data.product[0].id}`,
-      body: product,
+      body: {
+        data: product,
+      },
     });
 
     const { statusCode, body } = res;

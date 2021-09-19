@@ -21,7 +21,7 @@ jest.mock('react-intl', () => ({
   FormattedMessage: ({ id }) => id,
   useIntl: () => ({ formatMessage: jest.fn(({ id }) => id) }),
 }));
-jest.mock('../../ApplicationInfosPage', () => () => <h1>App infos</h1>);
+jest.mock('../pages/ApplicationInfosPage', () => () => <h1>App infos</h1>);
 
 const makeApp = (history, settings) => (
   <Theme>
@@ -33,6 +33,7 @@ const makeApp = (history, settings) => (
         runHookParallel={jest.fn()}
         runHookWaterfall={jest.fn()}
         runHookSeries={jest.fn()}
+        menu={[]}
       >
         <Router history={history}>
           <Route path="/settings/:settingId" component={SettingsPage} />
@@ -134,8 +135,8 @@ describe('ADMIN | pages | SettingsPage', () => {
 
       .c7 {
         height: 1px;
-        margin: 0;
         border: none;
+        margin: 0;
       }
 
       .c8 {

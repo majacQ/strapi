@@ -73,9 +73,13 @@ const DataManagerProvider = ({
   const { getPlugin } = useStrapiApp();
 
   const { apis } = getPlugin(pluginId);
+  <<<<<<< ds-props-update
+  const [infoModals, toggleInfoModal] = useState(false);
+  =======
   // FIXME
   const [, toggleInfoModal] = useState({ cancel: false });
   // const [infoModals, toggleInfoModal] = useState({ cancel: false });
+  >>>>>>> core/enable-ctb
   const { autoReload } = useAppInfos();
   const { formatMessage } = useIntl();
   const { trackUsage } = useTracking();
@@ -515,7 +519,7 @@ const DataManagerProvider = ({
 
   // Open the modal warning cancel changes
   const toggleModalCancel = () => {
-    toggleInfoModal(prev => ({ ...prev, cancel: !prev.cancel }));
+    toggleInfoModal(prev => !prev);
   };
 
   const updatePermissions = async () => {
@@ -573,9 +577,15 @@ const DataManagerProvider = ({
           {children}
           {isInDevelopmentMode && (
             <>
+  <<<<<<< ds-props-update
+              <FormModal />
+              <PopUpWarning
+                isOpen={infoModals}
+  =======
               {/* <FormModal /> */}
               {/* <PopUpWarning
                 isOpen={infoModals.cancel}
+  >>>>>>> core/enable-ctb
                 toggleModal={toggleModalCancel}
                 content={{
                   message: getTrad(

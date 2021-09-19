@@ -24,18 +24,21 @@ export default {
     // TODO update doc and guides
     app.addComponents({ name: 'media-library', Component: InputModalStepper });
 
-    // TODO
-    // app.addCorePluginMenuLink({
-    //   to: `/plugins/${pluginId}`,
-    //   icon,
-    //   intlLabel: {
-    //     id: `${pluginId}.plugin.name`,
-    //     defaultMessage: 'Media Library',
-    //   },
-    //   permissions: pluginPermissions.main,
-    // });
+    app.addMenuLink({
+      to: `/plugins/${pluginId}`,
+      icon,
+      intlLabel: {
+        id: `${pluginId}.plugin.name`,
+        defaultMessage: 'Media Library',
+      },
+      permissions: pluginPermissions.main,
+      Component: async () => {
+        const component = await import(/* webpackChunkName: "upload" */ './pages/App');
 
-    // TODO update guide
+        return component;
+      },
+    });
+
     app.addFields({ type: 'media', Component: InputMedia });
 
     app.addReducers(reducers);
