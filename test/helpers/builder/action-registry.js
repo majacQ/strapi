@@ -3,7 +3,7 @@
 const { isFunction, map } = require('lodash/fp');
 const modelsUtils = require('../models');
 
-const stringifyDates = object =>
+const stringifyDates = (object) =>
   JSON.parse(
     JSON.stringify(object, (key, value) => {
       if (this[key] instanceof Date) {
@@ -17,7 +17,7 @@ const formatFixtures = map(stringifyDates);
 
 module.exports = {
   contentType: {
-    create: contentType => {
+    create(contentType) {
       let createdModel;
 
       return {
@@ -25,11 +25,11 @@ module.exports = {
           createdModel = await modelsUtils.createContentType(contentType);
           ctx.addModel(createdModel);
         },
-        cleanup: () => modelsUtils.deleteContentType(createdModel.modelName),
+        cleanup: () => modelsUtils.deleteContentType(createdModel.uid),
       };
     },
 
-    createBatch: contentTypes => {
+    createBatch(contentTypes) {
       let createdModels = [];
 
       return {
@@ -39,13 +39,13 @@ module.exports = {
         },
         async cleanup() {
           for (const model of createdModels) {
-            await modelsUtils.deleteContentType(model.modelName);
+            await modelsUtils.deleteContentType(model.uid);
           }
         },
       };
     },
 
-    createMany: contentTypes => {
+    createMany(contentTypes) {
       const createdModels = [];
 
       return {
@@ -59,14 +59,14 @@ module.exports = {
         },
         async cleanup() {
           for (const model of createdModels) {
-            await modelsUtils.deleteContentType(model.modelName);
+            await modelsUtils.deleteContentType(model.uid);
           }
         },
       };
     },
   },
   component: {
-    create: component => {
+    create(component) {
       let createdModel;
 
       return {

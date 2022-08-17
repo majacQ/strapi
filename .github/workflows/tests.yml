@@ -3,10 +3,8 @@ name: 'Tests'
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
-    paths-ignore:
-      - 'docs/**'
 
 jobs:
   lint:
@@ -14,12 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [12, 14]
+        node: [14, 16]
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
+          cache: yarn
       - uses: ./.github/actions/install-modules
       - name: Run lint
         run: yarn run -s lint
@@ -32,12 +31,13 @@ jobs:
       CODECOV_TOKEN: ${{ secrets.codecov }}
     strategy:
       matrix:
-        node: [12, 14]
+        node: [14, 16]
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
+          cache: yarn
       - uses: ./.github/actions/install-modules
         with:
           globalPackages: codecov
@@ -52,19 +52,20 @@ jobs:
       CODECOV_TOKEN: ${{ secrets.codecov }}
     strategy:
       matrix:
-        node: [12, 14]
+        node: [14, 16]
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
+          cache: yarn
       - uses: ./.github/actions/install-modules
         with:
           globalPackages: codecov
       - name: Build
         run: yarn build
       - name: Run test
-        run: yarn run -s test:front && codecov -C -F front
+        run: yarn run -s test:front --coverage && codecov -C -F front
 
   e2e_ce_pg:
     runs-on: ubuntu-latest
@@ -72,8 +73,7 @@ jobs:
     name: '[CE] E2E (postgres, node: ${{ matrix.node }})'
     strategy:
       matrix:
-        node: [12, 14]
-      max-parallel: 2
+        node: [14, 16]
     services:
       postgres:
         # Docker Hub image
@@ -94,9 +94,10 @@ jobs:
           - 5432:5432
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
+          cache: yarn
       - uses: ./.github/actions/install-modules
       - uses: ./.github/actions/run-e2e-tests
         with:
@@ -108,8 +109,7 @@ jobs:
     name: '[CE] E2E (mysql, node: ${{ matrix.node }})'
     strategy:
       matrix:
-        node: [12, 14]
-      max-parallel: 2
+        node: [14, 16]
     services:
       mysql:
         image: mysql
@@ -129,9 +129,45 @@ jobs:
           - 3306:3306
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
+          cache: yarn
+      - uses: ./.github/actions/install-modules
+      - uses: ./.github/actions/run-e2e-tests
+        with:
+          dbOptions: '--dbclient=mysql --dbhost=localhost --dbport=3306 --dbname=strapi_test --dbusername=strapi --dbpassword=strapi'
+
+  e2e_ce_mysql_5:
+    runs-on: ubuntu-latest
+    needs: [lint, unit_back, unit_front]
+    name: '[CE] E2E (mysql:5 , node: ${{ matrix.node }})'
+    strategy:
+      matrix:
+        node: [14, 16]
+    services:
+      mysql:
+        image: mysql:5
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+          -e MYSQL_ROOT_PASSWORD=strapi
+          -e MYSQL_ROOT_HOST="%"
+          -e MYSQL_USER=strapi
+          -e MYSQL_PASSWORD=strapi
+          -e MYSQL_DATABASE=strapi_test
+          --entrypoint sh mysql -c "exec docker-entrypoint.sh mysqld --default-authentication-plugin=mysql_native_password"
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 3306:3306
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+          cache: yarn
       - uses: ./.github/actions/install-modules
       - uses: ./.github/actions/run-e2e-tests
         with:
@@ -140,44 +176,23 @@ jobs:
   e2e_ce_sqlite:
     runs-on: ubuntu-latest
     needs: [lint, unit_back, unit_front]
-    name: '[CE] E2E (sqlite, node: ${{ matrix.node }})'
+    name: '[CE] E2E (sqlite: ${{ matrix.sqlite_pkg }}, node: ${{ matrix.node }})'
     strategy:
       matrix:
-        node: [12, 14]
-      max-parallel: 2
+        node: [14, 16]
+        sqlite_pkg: ['better-sqlite3', 'sqlite3', '@vscode/sqlite3']
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
+          cache: yarn
       - uses: ./.github/actions/install-modules
       - uses: ./.github/actions/run-e2e-tests
+        env:
+          SQLITE_PKG: ${{ matrix.sqlite_pkg }}
         with:
-          dbOptions: '--dbclient=sqlite --dbfile=./tmp/data.db'
-
-  e2e_ce_mongo:
-    runs-on: ubuntu-latest
-    needs: [lint, unit_back, unit_front]
-    name: '[CE] E2E (mongo, node: ${{ matrix.node }})'
-    strategy:
-      matrix:
-        node: [12, 14]
-      max-parallel: 2
-    services:
-      mongo:
-        image: mongo
-        ports:
-          - 27017:27017
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
-        with:
-          node-version: ${{ matrix.node }}
-      - uses: ./.github/actions/install-modules
-      - uses: ./.github/actions/run-e2e-tests
-        with:
-          dbOptions: '--dbclient=mongo --dbhost=localhost --dbport=27017 --dbname=strapi_test'
-
+          dbOptions: '--dbclient=sqlite-legacy --dbfile=./tmp/data.db'
   # EE
   e2e_ee_pg:
     runs-on: ubuntu-latest
@@ -188,8 +203,7 @@ jobs:
       STRAPI_LICENSE: ${{ secrets.strapiLicense }}
     strategy:
       matrix:
-        node: [12, 14]
-      max-parallel: 2
+        node: [14, 16]
     services:
       postgres:
         # Docker Hub image
@@ -210,9 +224,10 @@ jobs:
           - 5432:5432
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
+          cache: yarn
       - uses: ./.github/actions/install-modules
       - uses: ./.github/actions/run-e2e-tests
         with:
@@ -228,8 +243,7 @@ jobs:
       STRAPI_LICENSE: ${{ secrets.strapiLicense }}
     strategy:
       matrix:
-        node: [12, 14]
-      max-parallel: 2
+        node: [14, 16]
     services:
       mysql:
         image: mysql
@@ -249,9 +263,10 @@ jobs:
           - 3306:3306
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
+          cache: yarn
       - uses: ./.github/actions/install-modules
       - uses: ./.github/actions/run-e2e-tests
         with:
@@ -261,48 +276,24 @@ jobs:
   e2e_ee_sqlite:
     runs-on: ubuntu-latest
     needs: [lint, unit_back, unit_front]
-    name: '[EE] E2E (sqlite, node: ${{ matrix.node }})'
+    name: '[EE] E2E (sqlite: ${{ matrix.sqlite_pkg }}, node: ${{ matrix.node }})'
     if: github.event.pull_request.head.repo.full_name == github.repository && !(github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]')
     env:
       STRAPI_LICENSE: ${{ secrets.strapiLicense }}
     strategy:
       matrix:
-        node: [12, 14]
-      max-parallel: 2
+        node: [14, 16]
+        sqlite_pkg: ['better-sqlite3', 'sqlite3', '@vscode/sqlite3']
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
+      - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
+          cache: yarn
       - uses: ./.github/actions/install-modules
       - uses: ./.github/actions/run-e2e-tests
+        env:
+          SQLITE_PKG: ${{ matrix.sqlite_pkg }}
         with:
           dbOptions: '--dbclient=sqlite --dbfile=./tmp/data.db'
-          runEE: true
-
-  e2e_ee_mongo:
-    runs-on: ubuntu-latest
-    needs: [lint, unit_back, unit_front]
-    name: '[EE] E2E (mongo, node: ${{ matrix.node }})'
-    if: github.event.pull_request.head.repo.full_name == github.repository && !(github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]')
-    env:
-      STRAPI_LICENSE: ${{ secrets.strapiLicense }}
-    strategy:
-      matrix:
-        node: [12, 14]
-      max-parallel: 2
-    services:
-      mongo:
-        image: mongo
-        ports:
-          - 27017:27017
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2-beta
-        with:
-          node-version: ${{ matrix.node }}
-      - uses: ./.github/actions/install-modules
-      - uses: ./.github/actions/run-e2e-tests
-        with:
-          dbOptions: '--dbclient=mongo --dbhost=localhost --dbport=27017 --dbname=strapi_test'
           runEE: true

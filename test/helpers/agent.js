@@ -9,9 +9,9 @@ const createAgent = (strapi, initialState = {}) => {
   const state = clone(initialState);
   const utils = createUtils(strapi);
 
-  const agent = options => {
+  const agent = (options) => {
     const { method, url, body, formData, qs: queryString } = options;
-    const supertestAgent = request.agent(strapi.server);
+    const supertestAgent = request.agent(strapi.server.httpServer);
 
     if (has('token', state)) {
       supertestAgent.auth(state.token, { type: 'bearer' });
@@ -30,7 +30,7 @@ const createAgent = (strapi, initialState = {}) => {
     }
 
     if (formData) {
-      const attachFieldToRequest = field => rq.field(field, formData[field]);
+      const attachFieldToRequest = (field) => rq.field(field, formData[field]);
       Object.keys(formData).forEach(attachFieldToRequest);
     }
 
@@ -41,9 +41,11 @@ const createAgent = (strapi, initialState = {}) => {
     return rq;
   };
 
-  const createShorthandMethod = method => (url, options = {}) => {
-    return agent({ ...options, url, method });
-  };
+  const createShorthandMethod =
+    (method) =>
+    (url, options = {}) => {
+      return agent({ ...options, url, method });
+    };
 
   Object.assign(agent, {
     assignState(newState) {
